@@ -395,13 +395,15 @@ export default function Home() {
               className="lg:w-1/2 relative"
             >
               <div className="grid grid-cols-2 gap-4 relative z-10">
-                <img src="https://images.unsplash.com/photo-1464207687429-7505649dae38?auto=format&fit=crop&w=600&q=80" alt="Tea Garden" className="rounded-2xl shadow-lg mt-8 object-cover h-64 w-full" />
-                <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80" alt="Royal Bengal Tiger" className="rounded-2xl shadow-lg object-cover h-64 w-full" />
+                <img src="https://images.unsplash.com/photo-1464207687429-7505649dae38?auto=format&fit=crop&w=600&q=80" alt="Tea Garden" className="block rounded-2xl shadow-lg mt-8 object-cover h-64 w-full" />
+                <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80" alt="Royal Bengal Tiger" className="block self-end rounded-2xl shadow-lg object-cover h-64 w-full" />
               </div>
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary/5 rounded-full blur-3xl -z-10"></div>
             </motion.div>
           </div>
         </div>
+
+        
       </section>
 
       {/* 5. Statistics (Recharts placeholder) */}

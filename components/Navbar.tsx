@@ -274,6 +274,7 @@ export default function Navbar() {
                       className="flex items-center justify-center py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 transition-colors shadow-md"
                     >
                       Sign Up
+                      
                     </Link>
                   </>
                 )}

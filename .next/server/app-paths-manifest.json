@@ -1,8 +1,6 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/places/route": "app/api/places/route.js",
   "/api/auth/[...all]/route": "app/api/auth/[...all]/route.js",
-  "/page": "app/page.js",
-  "/blog/page": "app/blog/page.js",
-  "/blog/[id]/page": "app/blog/[id]/page.js",
-  "/about/page": "app/about/page.js",
-  "/add-place/page": "app/add-place/page.js"
+  "/page": "app/page.js"
 }
