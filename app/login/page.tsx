@@ -181,9 +181,9 @@ export default function LoginPage() {
                   onClick={() => {
                     signIn.social({ provider: "google", callbackURL: "/" });
                   }}
-                  className="w-full py-3.5 px-4 border border-border rounded-xl shadow-sm text-sm font-bold text-foreground bg-card hover:bg-muted focus:outline-none transition-all"
+                  className="w-full py-3.5 px-4 flex items-center justify-center gap-2 border border-border rounded-xl shadow-sm text-sm font-bold text-foreground bg-card hover:bg-muted focus:outline-none transition-all"
                 >
-                 <FcGoogle /> Continue with Google 
+                 <FcGoogle className="text-xl" /> Continue with Google 
                 </button>
               </div>
             </form>

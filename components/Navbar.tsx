@@ -78,17 +78,25 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-3xl">🌿</span>
-            <span
+            <motion.span 
+              initial={{ rotate: -20, scale: 0.8 }}
+              animate={{ rotate: 0, scale: 1 }}
+              transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
+              className="text-3xl"
+            >🌿</motion.span>
+            <motion.span
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
               className={cn(
-                "text-xl font-bold transition-all duration-300",
+                "text-xl font-extrabold tracking-tight transition-all duration-300",
                 isSolid
-                  ? "bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
+                  ? "text-primary drop-shadow-sm"
                   : "text-white"
               )}
             >
               ShobujBangla
-            </span>
+            </motion.span>
           </Link>
 
           {/* Desktop Nav */}
