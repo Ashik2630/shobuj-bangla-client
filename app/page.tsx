@@ -25,6 +25,39 @@ const staggerContainer = {
   }
 };
 
+// Animated heading: each word fades + slides up with stagger
+const headingContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
+const headingWord = {
+  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+};
+
+function AnimatedHeading({ text, highlight, className = "" }: { text: string; highlight?: string; className?: string }) {
+  const words = text.split(" ");
+  return (
+    <motion.h2
+      variants={headingContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${className}`}
+    >
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          variants={headingWord}
+          className={word === highlight ? "text-primary" : ""}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </motion.h2>
+  );
+}
+
 const categories = [
   { name: "Hills", icon: "🏔", color: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400" },
   { name: "Sea Beaches", icon: "🌊", color: "bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400" },
@@ -425,6 +458,329 @@ export default function Home() {
           </motion.div>
           
           <StatsChart />
+        </div>
+      </section>
+
+      {/* 6. Bangladesh Culture Section */}
+      <section className="py-24 bg-background overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <motion.span
+              initial={{ opacity: 0, scale: 0.85 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="inline-block mb-4 rounded-full bg-orange-100 dark:bg-orange-900/30 px-4 py-1.5 text-sm font-semibold text-orange-600 dark:text-orange-400 uppercase tracking-widest"
+            >
+              Heritage &amp; Tradition
+            </motion.span>
+            <AnimatedHeading
+              text="Bangladesh Rich Culture"
+              highlight="Culture"
+              className="text-3xl md:text-4xl font-bold mb-4"
+            />
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.45, duration: 0.55 }}
+              className="text-foreground/70 text-lg"
+            >
+              Bangladesh's culture is a tapestry woven from ancient traditions, vibrant festivals, folk arts, and literary heritage — each thread telling a story of resilience and beauty.
+            </motion.p>
+          </div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {[
+              {
+                icon: "🎨",
+                title: "Folk Arts & Crafts",
+                desc: "Muslin weaving, Nakshi Kantha embroidery, terracotta pottery, and Jamdani sarees — handcrafted traditions passed down through generations.",
+                color: "bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800",
+                iconBg: "bg-orange-100 dark:bg-orange-900/40 text-orange-600",
+              },
+              {
+                icon: "🎵",
+                title: "Music & Baul Tradition",
+                desc: "The mystical Baul singers of Bengal seek the divine through song. Their folk music — recognized by UNESCO — captures the soul of Bangladesh.",
+                color: "bg-violet-50 dark:bg-violet-900/20 border-violet-200 dark:border-violet-800",
+                iconBg: "bg-violet-100 dark:bg-violet-900/40 text-violet-600",
+              },
+              {
+                icon: "🎭",
+                title: "Festivals & Celebrations",
+                desc: "Pohela Boishakh, Eid ul-Fitr, Durga Puja — Bangladesh celebrates life with color, dance, and community spirit throughout the year.",
+                color: "bg-pink-50 dark:bg-pink-900/20 border-pink-200 dark:border-pink-800",
+                iconBg: "bg-pink-100 dark:bg-pink-900/40 text-pink-600",
+              },
+              {
+                icon: "📚",
+                title: "Literary Legacy",
+                desc: "Home to Nobel Laureate Rabindranath Tagore and the spirit of Lalon Shah — Bangladesh has a rich poetic tradition that echoes through time.",
+                color: "bg-sky-50 dark:bg-sky-900/20 border-sky-200 dark:border-sky-800",
+                iconBg: "bg-sky-100 dark:bg-sky-900/40 text-sky-600",
+              },
+              {
+                icon: "🍛",
+                title: "Culinary Culture",
+                desc: "From hilsa fish curry to pitha festivals — Bangladeshi cuisine is a celebration of bold spices, river fish, and age-old recipes.",
+                color: "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800",
+                iconBg: "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600",
+              },
+              {
+                icon: "🏛️",
+                title: "Ancient Architecture",
+                desc: "Mosques of Bagerhat, the ruins of Paharpur, and colonial Dhaka — Bangladesh preserves millennia of architectural grandeur.",
+                color: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800",
+                iconBg: "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                variants={fadeInUp}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className={`rounded-2xl border p-6 shadow-sm hover:shadow-xl transition-all duration-300 ${item.color}`}
+              >
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mb-4 ${item.iconBg}`}>
+                  {item.icon}
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
+                <p className="text-foreground/70 text-sm leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 7. People's Kindness Section */}
+      <section className="py-24 bg-gradient-to-br from-emerald-50 via-background to-sky-50 dark:from-emerald-950/20 dark:via-background dark:to-sky-950/20 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="lg:w-1/2"
+            >
+              <motion.span
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="inline-block mb-4 rounded-full bg-sky-100 dark:bg-sky-900/30 px-4 py-1.5 text-sm font-semibold text-sky-600 dark:text-sky-400 uppercase tracking-widest"
+              >
+                Heart of Bangladesh
+              </motion.span>
+              <AnimatedHeading
+                text="People's Kindness and Warmth"
+                highlight="Kindness"
+                className="text-3xl md:text-4xl font-bold mb-3 leading-tight"
+              />
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="text-foreground/70 text-lg mb-8 leading-relaxed"
+              >
+                Travelers from around the world consistently describe the people of Bangladesh as among the most hospitable on earth. A smile, an open door, and a cup of cha — that's the Bangladeshi welcome.
+              </motion.p>
+
+              <div className="space-y-5">
+                {[
+                  { icon: "🤝", title: "Unmatched Hospitality", desc: "Guests are treated as a gift from God — 'Atithi Debo Bhava'. Strangers become family within minutes." },
+                  { icon: "💛", title: "Community Spirit", desc: "Whether it's a flooded village or a neighbor in need, Bangladeshis rally together with extraordinary collective care." },
+                  { icon: "🙏", title: "Respectful & Generous", desc: "Deep-rooted values of compassion, sharing, and respect for elders make every interaction warm and meaningful." },
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.15 }}
+                    className="flex items-start gap-4 p-4 rounded-2xl bg-white/70 dark:bg-white/5 border border-border/50 hover:border-primary/30 hover:shadow-md transition-all duration-300"
+                  >
+                    <span className="text-3xl shrink-0">{item.icon}</span>
+                    <div>
+                      <h4 className="font-bold text-foreground mb-1">{item.title}</h4>
+                      <p className="text-foreground/70 text-sm">{item.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="lg:w-1/2"
+            >
+              <div className="relative">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-4">
+                    <div className="rounded-2xl overflow-hidden shadow-lg h-48">
+                      <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80" alt="Bangladeshi smiles" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div className="rounded-2xl overflow-hidden shadow-lg h-36">
+                      <img src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=600&q=80" alt="Village life" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </div>
+                  </div>
+                  <div className="space-y-4 mt-8">
+                    <div className="rounded-2xl overflow-hidden shadow-lg h-36">
+                      <img src="https://images.unsplash.com/photo-1474928883557-c5741e28cfe2?auto=format&fit=crop&w=600&q=80" alt="Community gathering" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div className="rounded-2xl overflow-hidden shadow-lg h-48">
+                      <img src="https://images.unsplash.com/photo-1508919801845-fc2ae1bc2a28?auto=format&fit=crop&w=600&q=80" alt="Warm welcome" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -bottom-4 -right-4 bg-primary text-white rounded-2xl p-4 shadow-xl">
+                  <p className="text-2xl font-bold">98%</p>
+                  <p className="text-xs text-white/80">Travelers feel welcome</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Quote banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 text-center rounded-3xl bg-white/60 dark:bg-white/5 border border-border/50 p-10 backdrop-blur-sm"
+          >
+            <p className="text-2xl md:text-3xl font-semibold text-foreground/80 italic max-w-3xl mx-auto">
+              "The people of Bangladesh are the soul of the land — their kindness is the most beautiful destination."
+            </p>
+            <p className="mt-4 text-foreground/50 text-sm">— A traveler's reflection</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 8. Mahamanab Dari / Spirit of Great Humanity */}
+      <section className="py-24 bg-background relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none" />
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <motion.span
+              initial={{ opacity: 0, scale: 0.8, rotate: -3 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+              className="inline-block mb-4 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary uppercase tracking-widest"
+            >
+              Spirit of Humanity
+            </motion.span>
+            <AnimatedHeading
+              text="The Great Human Spirit"
+              highlight="Spirit"
+              className="text-3xl md:text-4xl font-bold mb-4"
+            />
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5, duration: 0.55 }}
+              className="text-foreground/70 text-lg leading-relaxed"
+            >
+              Bangladesh has gifted the world great souls — visionaries, poets, and humanists who championed love, unity, and the dignity of every human being. Their legacy lives on in every corner of this land.
+            </motion.p>
+          </div>
+
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+          >
+            {[
+              {
+                name: "Rabindranath Tagore",
+                role: "Poet, Nobel Laureate",
+                quote: "Where the mind is without fear and the head is held high, let my country awake.",
+                icon: "✍️",
+                gradient: "from-amber-500/20 to-orange-500/10",
+                border: "border-amber-200 dark:border-amber-800",
+              },
+              {
+                name: "Lalon Shah",
+                role: "Baul Mystic & Philosopher",
+                quote: "In the human body resides the divine — seek not God in temples, find the man within.",
+                icon: "🎵",
+                gradient: "from-violet-500/20 to-purple-500/10",
+                border: "border-violet-200 dark:border-violet-800",
+              },
+              {
+                name: "Sheikh Mujibur Rahman",
+                role: "Father of the Nation",
+                quote: "This land, this people — their freedom is my only prayer. They shall rise, they shall thrive.",
+                icon: "🕊️",
+                gradient: "from-emerald-500/20 to-green-500/10",
+                border: "border-emerald-200 dark:border-emerald-800",
+              },
+            ].map((person, i) => (
+              <motion.div
+                key={i}
+                variants={fadeInUp}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className={`relative rounded-3xl border p-8 bg-gradient-to-br ${person.gradient} ${person.border} shadow-sm hover:shadow-2xl transition-all duration-300`}
+              >
+                <div className="text-5xl mb-5">{person.icon}</div>
+                <blockquote className="text-foreground/80 text-sm italic leading-relaxed mb-6 border-l-4 border-primary/40 pl-4">
+                  "{person.quote}"
+                </blockquote>
+                <div className="mt-auto">
+                  <p className="font-bold text-foreground text-lg">{person.name}</p>
+                  <p className="text-foreground/50 text-sm mt-1">{person.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Values banner */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4"
+          >
+            {[
+              { icon: "❤️", value: "Compassion", sub: "Kindness to all" },
+              { icon: "🕊️", value: "Peace", sub: "Unity in diversity" },
+              { icon: "🌿", value: "Harmony", sub: "Living together" },
+              { icon: "🌟", value: "Dignity", sub: "Respect every soul" },
+            ].map((v, i) => (
+              <motion.div
+                key={i}
+                variants={fadeInUp}
+                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                className="text-center p-6 rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-lg transition-all duration-300"
+              >
+                <motion.div
+                  initial={{ scale: 0, rotate: -15 }}
+                  whileInView={{ scale: 1, rotate: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1, type: "spring", stiffness: 260 }}
+                  className="text-4xl mb-3"
+                >
+                  {v.icon}
+                </motion.div>
+                <p className="font-bold text-foreground text-lg">{v.value}</p>
+                <p className="text-primary/70 text-xs mt-1">{v.sub}</p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
