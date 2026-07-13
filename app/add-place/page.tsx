@@ -75,7 +75,7 @@ export default function AddPlacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 py-24">
+    <div className="min-h-screen bg-background px-4 pt-28 pb-24">
       <div className="mx-auto max-w-5xl">
         <Link href="/explore" className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
           <FiArrowLeft /> Back to Explore
