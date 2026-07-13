@@ -10,6 +10,7 @@ import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiCheckCircle } 
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { signIn, signUp, useSession } from "@/lib/auth-client";
+import { FcGoogle } from "react-icons/fc";
 
 
 export default function RegisterPage() {
@@ -238,7 +239,7 @@ export default function RegisterPage() {
                 }}
                 className="w-full py-3.5 px-4 border border-border rounded-xl shadow-sm text-sm font-bold text-foreground bg-card hover:bg-muted focus:outline-none transition-all"
               >
-                Continue with Google
+               <FcGoogle /> Continue with Google
               </button>
             </form>
 

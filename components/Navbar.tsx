@@ -95,7 +95,7 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-8">
             <ul className="flex items-center gap-6">
               {navLinks
-                .filter((l) => (isAuthenticated ? true : l.name !== "Add Place"))
+                .filter((l) => (isAuthenticated ? true : l.name === "Home" || l.name === "Explore"))
                 .map((link) => (
                   <li key={link.name}>
                     <Link
@@ -214,7 +214,7 @@ export default function Navbar() {
             <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
               <ul className="flex flex-col gap-1">
                 {navLinks
-                  .filter((l) => (isAuthenticated ? true : l.name !== "Add Place"))
+                  .filter((l) => (isAuthenticated ? true : l.name === "Home" || l.name === "Explore"))
                   .map((link) => (
                     <li key={link.name}>
                       <Link

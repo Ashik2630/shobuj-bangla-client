@@ -8,6 +8,7 @@ import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "@/lib/auth-client";
+import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -182,7 +183,7 @@ export default function LoginPage() {
                   }}
                   className="w-full py-3.5 px-4 border border-border rounded-xl shadow-sm text-sm font-bold text-foreground bg-card hover:bg-muted focus:outline-none transition-all"
                 >
-                  Continue with Google
+                 <FcGoogle /> Continue with Google 
                 </button>
               </div>
             </form>
