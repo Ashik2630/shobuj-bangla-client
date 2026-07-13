@@ -11,7 +11,12 @@ export const auth = betterAuth({
     client,
   }),
   secret: process.env.BETTER_AUTH_SECRET || "dev-secret-change-me",
-  trustedOrigins: [process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000"],
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://shobuj-bangla.vercel.app",
+    process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  ],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,

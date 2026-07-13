@@ -45,7 +45,7 @@ export default function PlaceDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const { data: session } = useSession();
-  const [place, setPlace] = useState(defaultPlace);
+  const [place, setPlace] = useState<typeof defaultPlace | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -60,12 +60,15 @@ export default function PlaceDetailsPage() {
         const data = await response.json();
 
         if (response.ok && data.success && Array.isArray(data.places)) {
-          const found = data.places.find((item: Record<string, unknown>) => String(item._id ?? item.id) === String(params.id));
+          const found = data.places.find((item: Record<string, unknown>) => {
+            const itemId = String(item._id ?? item.id ?? "");
+            return itemId === String(params.id);
+          });
           if (found) {
             setPlace({
               ...defaultPlace,
               ...found,
-              id: (found._id as string | number | undefined) ?? (found.id as string | number | undefined) ?? defaultPlace.id,
+              id: Number(found._id ?? found.id ?? defaultPlace.id),
               title: (found.title as string) ?? defaultPlace.title,
               district: (found.district as string) ?? defaultPlace.district,
               division: (found.division as string) ?? defaultPlace.division,
@@ -80,10 +83,14 @@ export default function PlaceDetailsPage() {
               specs: Array.isArray(found.specs) ? (found.specs as Array<{ label: string; value: string }>) : defaultPlace.specs,
               reviews: Array.isArray(found.reviews) ? (found.reviews as Array<{ name: string; rating: number; text: string }>) : defaultPlace.reviews,
             });
+          } else {
+            // Place not found, use default
+            setPlace(defaultPlace);
           }
         }
       } catch (error) {
         console.error("Failed to load place details", error);
+        setPlace(defaultPlace);
       } finally {
         setLoading(false);
       }
@@ -94,6 +101,10 @@ export default function PlaceDetailsPage() {
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center bg-background text-foreground">Loading place details...</div>;
+  }
+
+  if (!place) {
+    return <div className="flex min-h-screen items-center justify-center bg-background text-foreground">Place not found.</div>;
   }
 
   return (

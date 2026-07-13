@@ -7,7 +7,7 @@ import Link from "next/link";
 import { FiSearch, FiMapPin, FiStar, FiFilter, FiGrid, FiList, FiPlus, FiImage } from "react-icons/fi";
 
 type Place = {
-  id: string | number;
+  id: string;
   title: string;
   district: string;
   division: string;
@@ -48,9 +48,9 @@ export default function ExplorePage() {
         const data = await response.json();
 
         if (response.ok && data.success && Array.isArray(data.places)) {
-          const normalizedPlaces = data.places.map((place: Record<string, unknown>, index: number) => ({
+          const normalizedPlaces = data.places.map((place: Record<string, unknown>) => ({
             ...place,
-            id: (place.id as number | undefined) ?? data.places.length - index,
+            id: String((place._id as string | undefined) ?? (place.id as string | undefined) ?? ""),
             image:
               (place.image as string | undefined) ||
               "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80",
@@ -136,7 +136,7 @@ export default function ExplorePage() {
     }
 
     const placeToAdd = {
-      id: Date.now(),
+      id: String(Date.now()),
       ...newPlace,
       image:
         newPlace.image || "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80",
