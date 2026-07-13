@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "@/components/ThemeProvider";
 import { signOut, useSession } from "@/lib/auth-client";
 import { FiMenu, FiX, FiSun, FiMoon, FiLogOut } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { toast } from "react-hot-toast";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,6 +29,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { mounted, resolvedTheme, setTheme } = useTheme();
   const pathname = usePathname();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
@@ -52,6 +54,19 @@ export default function Navbar() {
   const toggleTheme = () => {
     if (!mounted) return;
     setTheme(isDark ? "light" : "dark");
+  };
+
+  const handleSignOut = async () => {
+    setIsOpen(false);
+    const loadingToast = toast.loading("Signing you out...");
+
+    try {
+      await signOut();
+      toast.success("Signed out successfully", { id: loadingToast });
+      router.push("/login");
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to sign out", { id: loadingToast });
+    }
   };
 
   // When transparent (hero behind), always white text.
@@ -151,7 +166,7 @@ export default function Navbar() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => signOut()}
+                    onClick={handleSignOut}
                     className={cn(
                       "rounded-full p-2 transition-colors",
                       isSolid ? "text-foreground/70 hover:text-primary hover:bg-muted" : "text-white/80 hover:text-white hover:bg-white/10"
@@ -259,10 +274,7 @@ export default function Navbar() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => {
-                          setIsOpen(false);
-                          signOut();
-                        }}
+                        onClick={handleSignOut}
                         className="rounded-full p-2 text-foreground/70 hover:text-primary"
                       >
                         <FiLogOut size={18} />

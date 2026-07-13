@@ -26,6 +26,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
+    const loadingToast = toast.loading("Signing you in...");
 
     try {
       const result = await signIn.email({
@@ -38,10 +39,10 @@ export default function LoginPage() {
         throw new Error(result.error.message || "Login failed");
       }
 
-      toast.success("Successfully logged in!");
+      toast.success("Successfully logged in!", { id: loadingToast });
       router.push("/");
     } catch (error: any) {
-      toast.error(error.message || "Login failed");
+      toast.error(error.message || "Login failed", { id: loadingToast });
     } finally {
       setIsLoading(false);
     }
