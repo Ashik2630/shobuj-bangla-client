@@ -4,34 +4,19 @@ import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FiArrowLeft, FiClock, FiCalendar, FiUser, FiShare2, FiTag } from "react-icons/fi";
 import Link from "next/link";
-import Image from "next/image";
+import { blogs } from "../data";
 
 export default function BlogDetailsPage() {
   const params = useParams();
   const router = useRouter();
   
-  // Dummy data (can be replaced by real fetch based on params.id)
-  const blog = {
-    id: params.id || 1,
-    title: "A Complete Guide to Exploring the Sundarbans",
-    content: `The Sundarbans, the largest mangrove forest in the world, is a UNESCO World Heritage site and a must-visit destination for nature lovers. Spread across Bangladesh and India, it offers a unique ecosystem teeming with wildlife, including the majestic Royal Bengal Tiger.
-    
-In this guide, we will walk you through everything you need to know before visiting the Sundarbans. From the best time to visit, to the safety precautions you should take, we've got you covered.
+  // Find the blog based on params.id
+  const blog = blogs.find(b => b.id === Number(params.id)) || blogs[0];
 
-**1. Best Time to Visit:**
-The ideal time to explore the Sundarbans is during the winter months, from November to February. The weather is cool and pleasant, making it easier to navigate the waterways and enjoy the wildlife.
-
-**2. What to Pack:**
-Pack light, comfortable clothing, preferably in earthy tones to blend in with the environment. Don't forget your binoculars, camera, insect repellent, and a good pair of walking shoes.
-
-**3. Wildlife Spotting:**
-Apart from the Royal Bengal Tiger, keep an eye out for saltwater crocodiles, spotted deer, wild boars, and a variety of bird species. The forest is also home to the Gangetic dolphin, which can sometimes be spotted in the rivers.`,
-    author: "ShobujBangla Team",
-    date: "July 12, 2026",
-    readTime: "5 min read",
-    image: "https://images.unsplash.com/photo-1616854190849-db3f74619d0a?q=80&w=1470&auto=format&fit=crop",
-    tags: ["Nature", "Adventure", "Guide"],
-  };
+  // Find related blogs (same category, exclude current)
+  const relatedBlogs = blogs
+    .filter(b => b.category === blog.category && b.id !== blog.id)
+    .slice(0, 3);
 
   return (
     <div className="container mx-auto px-4 py-24 min-h-screen">
@@ -107,6 +92,32 @@ Apart from the Royal Bengal Tiger, keep an eye out for saltwater crocodiles, spo
             </button>
           </div>
         </div>
+
+        {/* Related Blogs Section */}
+        {relatedBlogs.length > 0 && (
+          <div className="mt-16 pt-12 border-t border-border">
+            <h3 className="text-2xl font-bold mb-8">Related Articles</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedBlogs.map((post) => (
+                <Link key={post.id} href={`/blog/${post.id}`} className="block bg-card border border-border rounded-2xl overflow-hidden hover:shadow-xl hover:border-primary/40 transition-all duration-300 group">
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <div className="absolute top-3 left-3 bg-primary/90 text-white px-2 py-1 rounded text-xs font-bold">
+                      {post.category}
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <h4 className="text-md font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">{post.title}</h4>
+                    <div className="flex items-center justify-between text-xs text-foreground/60 mt-4">
+                      <span className="flex items-center gap-1"><FiUser size={12}/> {post.author}</span>
+                      <span className="flex items-center gap-1"><FiClock size={12}/> {post.readTime}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </motion.div>
     </div>
   );

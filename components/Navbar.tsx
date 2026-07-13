@@ -55,10 +55,12 @@ export default function Navbar() {
   };
 
   // When transparent (hero behind), always white text.
-  // When scrolled (solid bg), use theme colors.
-  const linkClass = scrolled ? "text-foreground/80 hover:text-primary" : "text-white/90 hover:text-white";
-  const activeLinkClass = scrolled ? "text-primary font-semibold" : "text-white font-bold";
-  const iconBtnClass = scrolled
+  // When scrolled or NOT on home page (solid bg), use theme colors.
+  const isSolid = scrolled || pathname !== "/";
+
+  const linkClass = isSolid ? "text-foreground/80 hover:text-primary" : "text-white/90 hover:text-white";
+  const activeLinkClass = isSolid ? "text-primary font-semibold" : "text-white font-bold";
+  const iconBtnClass = isSolid
     ? "p-2 rounded-full hover:bg-muted text-foreground/70 hover:text-primary transition-colors"
     : "p-2 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors";
 
@@ -66,9 +68,9 @@ export default function Navbar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
+        isSolid
           ? "bg-background/90 backdrop-blur-md border-b border-border shadow-sm py-3"
-          : "bg-linear-to-b from-black/55 to-transparent py-5"
+          : "bg-gradient-to-b from-black/55 to-transparent py-5"
       )}
     >
       <div className="container mx-auto px-4 md:px-6">
@@ -80,8 +82,8 @@ export default function Navbar() {
             <span
               className={cn(
                 "text-xl font-bold transition-all duration-300",
-                scrolled
-                  ? "bg-clip-text text-transparent bg-linear-to-r from-primary to-secondary"
+                isSolid
+                  ? "bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
                   : "text-white"
               )}
             >
@@ -93,7 +95,7 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-8">
             <ul className="flex items-center gap-6">
               {navLinks
-                .filter((l) => (isAuthenticated ? true : ["Home", "Explore"].includes(l.name)))
+                .filter((l) => (isAuthenticated ? true : l.name !== "Add Place"))
                 .map((link) => (
                   <li key={link.name}>
                     <Link
@@ -112,7 +114,7 @@ export default function Navbar() {
             <div
               className={cn(
                 "flex items-center gap-4 pl-4 border-l transition-colors",
-                scrolled ? "border-border" : "border-white/30"
+                isSolid ? "border-border" : "border-white/30"
               )}
             >
               {/* Theme Toggle */}
@@ -137,14 +139,14 @@ export default function Navbar() {
                       height={32}
                       className="h-8 w-8 rounded-full object-cover"
                     />
-                    <span className={cn("text-sm font-medium", scrolled ? "text-foreground" : "text-white")}>{user?.name || "User"}</span>
+                    <span className={cn("text-sm font-medium", isSolid ? "text-foreground" : "text-white")}>{user?.name || "User"}</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => signOut()}
                     className={cn(
                       "rounded-full p-2 transition-colors",
-                      scrolled ? "text-foreground/70 hover:text-primary hover:bg-muted" : "text-white/80 hover:text-white hover:bg-white/10"
+                      isSolid ? "text-foreground/70 hover:text-primary hover:bg-muted" : "text-white/80 hover:text-white hover:bg-white/10"
                     )}
                     aria-label="Sign out"
                   >
@@ -161,7 +163,7 @@ export default function Navbar() {
                     href="/register"
                     className={cn(
                       "px-4 py-2 rounded-full text-sm font-semibold transition-all",
-                      scrolled
+                      isSolid
                         ? "bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg"
                         : "bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/40 text-white"
                     )}
@@ -188,7 +190,7 @@ export default function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               className={cn(
                 "p-2 rounded-full transition-colors",
-                scrolled
+                isSolid
                   ? "text-foreground/80 hover:text-primary hover:bg-muted"
                   : "text-white/90 hover:text-white hover:bg-white/10"
               )}
@@ -212,7 +214,7 @@ export default function Navbar() {
             <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
               <ul className="flex flex-col gap-1">
                 {navLinks
-                  .filter((l) => (isAuthenticated ? true : ["Home", "Explore"].includes(l.name)))
+                  .filter((l) => (isAuthenticated ? true : l.name !== "Add Place"))
                   .map((link) => (
                     <li key={link.name}>
                       <Link
