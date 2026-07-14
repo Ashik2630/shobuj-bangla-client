@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
-import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "@/lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
@@ -26,7 +26,6 @@ export default function LoginPage() {
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
-    const loadingToast = toast.loading("Signing you in...");
 
     try {
       const result = await signIn.email({
@@ -39,10 +38,42 @@ export default function LoginPage() {
         throw new Error(result.error.message || "Login failed");
       }
 
-      toast.success("Successfully logged in!", { id: loadingToast });
+      await Swal.fire({
+        icon: "success",
+        title: "Welcome back",
+        text: "Successfully logged in!",
+        timer: 1600,
+        showConfirmButton: false,
+      });
       router.push("/");
     } catch (error: any) {
-      toast.error(error.message || "Login failed", { id: loadingToast });
+      Swal.fire({ icon: "error", title: "Login failed", text: error.message || "Login failed" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    try {
+      const result = await signIn.email({
+        email: "demo@shobujbangla.test",
+        password: "DemoPass123!",
+        rememberMe: true,
+      });
+
+      if (result.error) throw new Error(result.error.message || "Demo login failed");
+
+      await Swal.fire({
+        icon: "success",
+        title: "Demo login successful",
+        text: "Signed in as demo user",
+        timer: 1600,
+        showConfirmButton: false,
+      });
+      router.push("/");
+    } catch (error: any) {
+      Swal.fire({ icon: "error", title: "Demo login failed", text: error?.message || "Demo login failed" });
     } finally {
       setIsLoading(false);
     }
@@ -185,6 +216,14 @@ export default function LoginPage() {
                   className="w-full py-3.5 px-4 flex items-center justify-center gap-2 border border-border rounded-xl shadow-sm text-sm font-bold text-foreground bg-card hover:bg-muted focus:outline-none transition-all"
                 >
                  <FcGoogle className="text-xl" /> Continue with Google 
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDemoLogin}
+                  disabled={isLoading}
+                  className="w-full py-3.5 px-4 flex items-center justify-center gap-2 border border-border rounded-xl shadow-sm text-sm font-bold text-foreground bg-background hover:bg-muted focus:outline-none transition-all"
+                >
+                  Demo Login
                 </button>
               </div>
             </form>

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { FiMapPin, FiImage, FiSave, FiArrowLeft } from "react-icons/fi";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const initialState = {
   title: "",
@@ -39,7 +39,7 @@ export default function AddPlacePage() {
     e.preventDefault();
 
     if (!form.title || !form.district || !form.division || !form.category) {
-      toast.error("Please fill in the required place details.");
+      Swal.fire({ icon: "warning", title: "Missing details", text: "Please fill in the required place details." });
       return;
     }
 
@@ -64,11 +64,17 @@ export default function AddPlacePage() {
         throw new Error(data.message || "Failed to save the place.");
       }
 
-      toast.success("Place card added successfully and saved to the database.");
+      await Swal.fire({
+        icon: "success",
+        title: "Place added",
+        text: "Place card added successfully and saved to the database.",
+        timer: 1800,
+        showConfirmButton: false,
+      });
       router.push("/explore");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unable to save the place right now.";
-      toast.error(message);
+      Swal.fire({ icon: "error", title: "Save failed", text: message });
     } finally {
       setIsSubmitting(false);
     }

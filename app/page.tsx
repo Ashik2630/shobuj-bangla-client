@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FiMapPin, FiStar, FiArrowRight, FiCheckCircle, FiChevronDown, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import SkeletonCard from "@/components/SkeletonCard";
 
 // Dynamically import Recharts to avoid SSR issues
 const StatsChart = dynamic(() => import("@/components/StatsChart"), { ssr: false });
@@ -106,10 +107,12 @@ type FeaturedPlace = {
 export default function Home() {
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [featuredPlaces, setFeaturedPlaces] = useState<FeaturedPlace[]>([]);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
     const loadFeaturedPlaces = async () => {
+      setLoadingFeatured(true);
       try {
         const response = await fetch("/api/places");
         const data = await response.json();
@@ -131,6 +134,9 @@ export default function Home() {
         }
       } catch (error) {
         console.error("Failed to load featured places", error);
+      }
+      finally {
+        setLoadingFeatured(false);
       }
     };
 
@@ -335,52 +341,58 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {featuredPlaces.map((place, i) => (
-              <motion.div
-                key={place.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl transition-all duration-300 group"
-              >
-                <div className="relative h-56 overflow-hidden">
-                  <div className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-primary">
-                    {place.category}
+            {loadingFeatured
+              ? Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i}>
+                    <SkeletonCard />
                   </div>
-                  <img 
-                    src={place.image} 
-                    alt={place.title} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{place.title}</h3>
-                    <div className="flex items-center gap-1 text-amber-500 text-sm font-medium">
-                      <FiStar className="fill-current" />
-                      <span>{place.rating}</span>
+                ))
+              : featuredPlaces.map((place, i) => (
+                  <motion.div
+                    key={place.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl transition-all duration-300 group"
+                  >
+                    <div className="relative h-56 overflow-hidden">
+                      <div className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-primary">
+                        {place.category}
+                      </div>
+                      <img 
+                        src={place.image} 
+                        alt={place.title} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
                     </div>
-                  </div>
-                  <div className="flex items-center text-foreground/60 text-sm mb-4">
-                    <FiMapPin className="mr-1" />
-                    <span>{place.district}</span>
-                  </div>
-                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
-                    <div className="text-sm">
-                      <span className="text-foreground/60">Entry Fee:</span>
-                      <span className="font-semibold text-foreground ml-1">{place.entryFee}</span>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{place.title}</h3>
+                        <div className="flex items-center gap-1 text-amber-500 text-sm font-medium">
+                          <FiStar className="fill-current" />
+                          <span>{place.rating}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center text-foreground/60 text-sm mb-4">
+                        <FiMapPin className="mr-1" />
+                        <span>{place.district}</span>
+                      </div>
+                      <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
+                        <div className="text-sm">
+                          <span className="text-foreground/60">Entry Fee:</span>
+                          <span className="font-semibold text-foreground ml-1">{place.entryFee}</span>
+                        </div>
+                        <Link 
+                          href={`/explore/${place.id}`}
+                          className="text-primary font-medium hover:underline text-sm"
+                        >
+                          View Details
+                        </Link>
+                      </div>
                     </div>
-                    <Link 
-                      href={`/explore/${place.id}`}
-                      className="text-primary font-medium hover:underline text-sm"
-                    >
-                      View Details
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                  </motion.div>
+                ))}
           </div>
         </div>
       </section>

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiCheckCircle } from "react-icons/fi";
-import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
@@ -44,10 +44,16 @@ export default function RegisterPage() {
         throw new Error(result.error.message || "Registration failed");
       }
 
-      toast.success("Account created! Welcome to ShobujBangla 🌿");
+      await Swal.fire({
+        icon: "success",
+        title: "Account created",
+        text: "Welcome to ShobujBangla 🌿",
+        timer: 1800,
+        showConfirmButton: false,
+      });
       router.push("/");
     } catch (error: any) {
-      toast.error(error.message || "Registration failed");
+      Swal.fire({ icon: "error", title: "Registration failed", text: error.message || "Registration failed" });
     } finally {
       setIsLoading(false);
     }

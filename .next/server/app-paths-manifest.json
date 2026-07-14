@@ -4,6 +4,7 @@
   "/about/page": "app/about/page.js",
   "/add-place/page": "app/add-place/page.js",
   "/api/auth/[...all]/route": "app/api/auth/[...all]/route.js",
+  "/api/items/[id]/route": "app/api/items/[id]/route.js",
   "/api/items/route": "app/api/items/route.js",
   "/api/places/route": "app/api/places/route.js",
   "/auth/api/[...all]/route": "app/auth/api/[...all]/route.js",
@@ -13,7 +14,11 @@
   "/explore/[id]/page": "app/explore/[id]/page.js",
   "/explore/page": "app/explore/page.js",
   "/items/add/page": "app/items/add/page.js",
+  "/items/manage/page": "app/items/manage/page.js",
   "/login/page": "app/login/page.js",
+  "/manage-places/page": "app/manage-places/page.js",
   "/page": "app/page.js",
-  "/register/page": "app/register/page.js"
+  "/privacy/page": "app/privacy/page.js",
+  "/register/page": "app/register/page.js",
+  "/terms/page": "app/terms/page.js"
 }

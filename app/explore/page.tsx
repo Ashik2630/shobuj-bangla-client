@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import SkeletonCard from "@/components/SkeletonCard";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FiSearch, FiMapPin, FiStar, FiFilter, FiGrid, FiList, FiPlus, FiImage } from "react-icons/fi";
@@ -29,6 +30,7 @@ export default function ExplorePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddForm, setShowAddForm] = useState(false);
   const [places, setPlaces] = useState<Place[]>([]);
+  const [placesLoading, setPlacesLoading] = useState(true);
   const [newPlace, setNewPlace] = useState({
     title: "",
     district: "",
@@ -43,6 +45,7 @@ export default function ExplorePage() {
 
   useEffect(() => {
     const loadPlaces = async () => {
+      setPlacesLoading(true);
       try {
         const response = await fetch("/api/places");
         const data = await response.json();
@@ -60,6 +63,9 @@ export default function ExplorePage() {
         }
       } catch (error) {
         console.error("Failed to load places from database", error);
+      }
+      finally {
+        setPlacesLoading(false);
       }
     };
 
@@ -359,63 +365,69 @@ export default function ExplorePage() {
           )}
 
           <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
-            {paginatedPlaces.length > 0 ? (
-              paginatedPlaces.map((place, i) => (
-              <motion.div
-                key={place.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.05 }}
-                className={`bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex ${viewMode === "list" ? "flex-row h-48" : "flex-col"}`}
-              >
-                <div className={`relative overflow-hidden ${viewMode === "list" ? "w-1/3" : "h-56"}`}>
-                  <div className="absolute top-3 left-3 z-10 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs font-semibold text-primary">
-                    {place.category}
-                  </div>
-                  <img 
-                    src={place.image} 
-                    alt={place.title} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
+            {placesLoading ? (
+              Array.from({ length: itemsPerPage }).map((_, i) => (
+                <div key={i}>
+                  <SkeletonCard />
                 </div>
-                
-                <div className={`p-5 flex flex-col justify-between ${viewMode === "list" ? "w-2/3" : ""}`}>
-                  <div>
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-1">{place.title}</h3>
-                      <div className="flex items-center gap-1 text-amber-500 text-sm font-medium bg-amber-500/10 px-2 py-0.5 rounded text-nowrap">
-                        <FiStar className="fill-current" />
-                        <span>{place.rating}</span>
-                      </div>
+              ))
+            ) : paginatedPlaces.length > 0 ? (
+              paginatedPlaces.map((place, i) => (
+                <motion.div
+                  key={place.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.05 }}
+                  className={`bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex ${viewMode === "list" ? "flex-row h-48" : "flex-col"}`}
+                >
+                  <div className={`relative overflow-hidden ${viewMode === "list" ? "w-1/3" : "h-56"}`}>
+                    <div className="absolute top-3 left-3 z-10 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs font-semibold text-primary">
+                      {place.category}
                     </div>
-                    
-                    <div className="flex items-center text-foreground/60 text-sm mb-3">
-                      <FiMapPin className="mr-1 text-primary/70" />
-                      <span>{place.district}, {place.division}</span>
-                    </div>
-                    
-                    {viewMode === "list" && (
-                      <p className="text-sm text-foreground/70 mb-4 line-clamp-2">
-                        Experience the beauty of {place.title}, a top destination for {place.category.toLowerCase()} lovers in the {place.division} division.
-                      </p>
-                    )}
+                    <img 
+                      src={place.image} 
+                      alt={place.title} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
                   </div>
                   
-                  <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
-                    <div className="text-sm">
-                      <span className="text-foreground/60 text-xs block">Entry Fee</span>
-                      <span className="font-semibold text-foreground">{place.entryFee}</span>
+                  <div className={`p-5 flex flex-col justify-between ${viewMode === "list" ? "w-2/3" : ""}`}>
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-1">{place.title}</h3>
+                        <div className="flex items-center gap-1 text-amber-500 text-sm font-medium bg-amber-500/10 px-2 py-0.5 rounded text-nowrap">
+                          <FiStar className="fill-current" />
+                          <span>{place.rating}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center text-foreground/60 text-sm mb-3">
+                        <FiMapPin className="mr-1 text-primary/70" />
+                        <span>{place.district}, {place.division}</span>
+                      </div>
+                      
+                      {viewMode === "list" && (
+                        <p className="text-sm text-foreground/70 mb-4 line-clamp-2">
+                          Experience the beauty of {place.title}, a top destination for {place.category.toLowerCase()} lovers in the {place.division} division.
+                        </p>
+                      )}
                     </div>
-                    <Link 
-                      href={`/explore/${place.id}`}
-                      className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm"
-                    >
-                      Details
-                    </Link>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
+                      <div className="text-sm">
+                        <span className="text-foreground/60 text-xs block">Entry Fee</span>
+                        <span className="font-semibold text-foreground">{place.entryFee}</span>
+                      </div>
+                      <Link 
+                        href={`/explore/${place.id}`}
+                        className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm"
+                      >
+                        Details
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))
+                </motion.div>
+              ))
             ) : (
               <div className="col-span-full py-20 text-center flex flex-col items-center justify-center bg-card border border-border rounded-2xl">
                 <FiSearch size={48} className="text-foreground/30 mb-4" />

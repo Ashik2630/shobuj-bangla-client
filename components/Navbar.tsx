@@ -10,16 +10,25 @@ import { FiMenu, FiX, FiSun, FiMoon, FiLogOut } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const navLinks = [
+const publicNavLinks = [
+  { name: "Home", href: "/" },
+  { name: "Explore", href: "/explore" },
+  { name: "About", href: "/about" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact", href: "/contact" },
+];
+
+const authenticatedNavLinks = [
   { name: "Home", href: "/" },
   { name: "Explore", href: "/explore" },
   { name: "Add Place", href: "/add-place" },
+  { name: "Manage Places", href: "/manage-places" },
   { name: "About", href: "/about" },
   { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
@@ -58,20 +67,38 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     setIsOpen(false);
-    const loadingToast = toast.loading("Signing you out...");
+
+    const result = await Swal.fire({
+      title: "Sign out?",
+      text: "You will be logged out of your account.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, sign out",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#2e7d32",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await signOut();
-      toast.success("Signed out successfully", { id: loadingToast });
+      await Swal.fire({
+        icon: "success",
+        title: "Signed out",
+        text: "You have been signed out successfully.",
+        timer: 1800,
+        showConfirmButton: false,
+      });
       router.push("/login");
     } catch (error: any) {
-      toast.error(error?.message || "Failed to sign out", { id: loadingToast });
+      Swal.fire({ icon: "error", title: "Sign out failed", text: error?.message || "Failed to sign out" });
     }
   };
 
   // When transparent (hero behind), always white text.
   // When scrolled or NOT on home page (solid bg), use theme colors.
   const isSolid = scrolled || pathname !== "/";
+  const visibleLinks = isAuthenticated ? authenticatedNavLinks : publicNavLinks;
 
   const linkClass = isSolid ? "text-foreground/80 hover:text-primary" : "text-white/90 hover:text-white";
   const activeLinkClass = isSolid ? "text-primary font-semibold" : "text-white font-bold";
@@ -117,9 +144,7 @@ export default function Navbar() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             <ul className="flex items-center gap-6">
-              {navLinks
-                .filter((l) => (isAuthenticated ? true : l.name === "Home" || l.name === "Explore"))
-                .map((link) => (
+              {visibleLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -236,9 +261,7 @@ export default function Navbar() {
           >
             <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
               <ul className="flex flex-col gap-1">
-                {navLinks
-                  .filter((l) => (isAuthenticated ? true : l.name === "Home" || l.name === "Explore"))
-                  .map((link) => (
+                {visibleLinks.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
