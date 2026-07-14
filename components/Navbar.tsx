@@ -18,10 +18,7 @@ function cn(...inputs: ClassValue[]) {
 
 const publicNavLinks = [
   { name: "Home", href: "/" },
-  { name: "Explore", href: "/explore" },
-  { name: "About", href: "/about" },
-  { name: "Blog", href: "/blog" },
-  { name: "Contact", href: "/contact" },
+  { name: "Explore", href: "/explore" }
 ];
 
 const authenticatedNavLinks = [
