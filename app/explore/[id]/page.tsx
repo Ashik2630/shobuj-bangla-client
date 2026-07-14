@@ -4,8 +4,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import { FiArrowLeft, FiMapPin, FiStar, FiClock, FiDollarSign, FiImage, FiMessageCircle, FiHeart } from "react-icons/fi";
 
@@ -19,6 +17,10 @@ const defaultPlace = {
   entryFee: "Free",
   bestSeason: "Winter",
   image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+  images: [
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=80",
+  ],
   description:
     "Sajek Valley is one of the most scenic hill destinations in Bangladesh, known for its cloud-covered mountains, bamboo cottages, and peaceful sunrise views.",
   overview:
@@ -43,17 +45,10 @@ const defaultPlace = {
 
 export default function PlaceDetailsPage() {
   const params = useParams();
-  const router = useRouter();
-  const { data: session } = useSession();
   const [place, setPlace] = useState<typeof defaultPlace | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (session === undefined) return; // still loading
-    if (!session?.user) {
-      router.replace("/login");
-      return;
-    }
     const loadPlace = async () => {
       try {
         const response = await fetch("/api/places");
@@ -77,6 +72,9 @@ export default function PlaceDetailsPage() {
               entryFee: (found.entryFee as string) ?? defaultPlace.entryFee,
               bestSeason: (found.bestSeason as string) ?? defaultPlace.bestSeason,
               image: (found.image as string) ?? defaultPlace.image,
+              images: Array.isArray(found.images)
+                ? (found.images as string[])
+                : [((found.image as string) ?? defaultPlace.image)],
               description: (found.description as string) ?? defaultPlace.description,
               overview: (found.overview as string) ?? defaultPlace.overview,
               highlights: Array.isArray(found.highlights) ? (found.highlights as string[]) : defaultPlace.highlights,
@@ -97,7 +95,7 @@ export default function PlaceDetailsPage() {
     };
 
     loadPlace();
-  }, [params.id, router, session]);
+  }, [params.id]);
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center bg-background text-foreground">Loading place details...</div>;
@@ -163,6 +161,22 @@ export default function PlaceDetailsPage() {
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-8">
+            {place.images.length > 1 && (
+              <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+                <h2 className="text-2xl font-bold text-foreground">Media / Gallery</h2>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {place.images.map((img: string, index: number) => (
+                    <img
+                      key={`${img}-${index}`}
+                      src={img}
+                      alt={`${place.title} view ${index + 1}`}
+                      className="h-48 w-full rounded-2xl object-cover"
+                    />
+                  ))}
+                </div>
+              </motion.section>
+            )}
+
             <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-6 shadow-sm">
               <h2 className="text-2xl font-bold text-foreground">Description / Overview</h2>
               <p className="mt-4 text-foreground/70 leading-7">{place.description}</p>

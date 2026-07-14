@@ -420,7 +420,7 @@ export default function ExplorePage() {
               <div className="col-span-full py-20 text-center flex flex-col items-center justify-center bg-card border border-border rounded-2xl">
                 <FiSearch size={48} className="text-foreground/30 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">No places found</h3>
-                <p className="text-foreground/60 max-w-sm">We couldn&lsquo;t find any places matching your current filters. Try adjusting your search or categories.</p>
+                <p className="text-foreground/60 max-w-sm">We could&lsquo;t find any places matching your current filters. Try adjusting your search or categories.</p>
                 <button 
                   onClick={() => {
                     setSearchQuery("");
