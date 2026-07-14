@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { useSession } from "@/lib/auth-client";
@@ -108,13 +109,19 @@ export default function ManagePlacesPage() {
               {places.map((place) => (
                 <div key={String(place._id ?? place.id)} className="flex flex-col gap-4 rounded-2xl border border-border bg-background/70 p-4 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-start gap-3">
-                    <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-                      <FiMapPin size={18} />
+                    <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-md bg-background/10">
+                      <Image
+                        src={place.image || "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=400&q=80"}
+                        alt={place.title}
+                        width={80}
+                        height={56}
+                        className="object-contain h-full w-full bg-transparent"
+                      />
                     </div>
-                    <div>
-                      <h2 className="font-semibold text-foreground">{place.title}</h2>
-                      <p className="text-sm text-foreground/60">{place.district}, {place.division} • {place.category}</p>
-                      <p className="mt-1 text-sm text-foreground/70">{place.description ?? "A user-submitted destination."}</p>
+                    <div className="min-w-0">
+                      <h2 className="font-semibold text-foreground truncate">{place.title}</h2>
+                      <p className="text-sm text-foreground/60 truncate">{place.district}, {place.division} • {place.category}</p>
+                      <p className="mt-1 text-sm text-foreground/70 line-clamp-2">{place.description ?? "A user-submitted destination."}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

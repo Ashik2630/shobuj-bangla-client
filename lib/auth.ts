@@ -23,4 +23,10 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  // Enable email + password sign up/sign in
+  emailAndPassword: {
+    enabled: true,
+    // allow sign up via email/password (set to false to disable sign up)
+    disableSignUp: false,
+  },
 });

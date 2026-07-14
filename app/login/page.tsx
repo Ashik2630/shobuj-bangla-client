@@ -57,8 +57,8 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       const result = await signIn.email({
-        email: "demo@shobujbangla.test",
-        password: "DemoPass123!",
+        email: "vekewyd@mailinator.com",
+        password: "Pa$$w0rd!",
         rememberMe: true,
       });
 
