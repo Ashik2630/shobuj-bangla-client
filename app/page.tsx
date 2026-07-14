@@ -156,8 +156,8 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. Hero Section */}
-      <section className="relative h-[70vh] min-h-140 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
+      <section className="relative min-h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden pt-20 md:pt-0">
+          <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-background z-10"></div>
           <AnimatePresence mode="wait">
             <motion.img
@@ -168,14 +168,14 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.02 }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover object-center"
             />
           </AnimatePresence>
         </div>
 
         <div className="container relative z-20 mx-auto px-4 text-white">
-          <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="max-w-3xl min-h-[350px] flex flex-col justify-center">
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="max-w-3xl min-h-[220px] md:min-h-[350px] flex flex-col justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeSlide}
@@ -184,29 +184,29 @@ export default function Home() {
                   exit={{ opacity: 0, y: -30 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                 >
-                  <span className="mb-4 inline-flex rounded-full border border-white/25 bg-white/15 px-3 py-1 text-sm font-medium uppercase tracking-[0.2em] backdrop-blur-md">
+                  <span className="mb-3 inline-flex rounded-full border border-white/20 bg-white/10 px-2 py-0.5 text-xs font-medium uppercase tracking-wide backdrop-blur-md">
                     {heroSlides[activeSlide].badge}
                   </span>
-                  <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+                  <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight break-words">
                     {heroSlides[activeSlide].title}
                   </h1>
-                  <p className="mt-4 max-w-2xl text-lg text-gray-200 sm:text-xl">
+                  <p className="mt-2 max-w-2xl text-xs sm:text-sm md:text-base text-gray-200">
                     {heroSlides[activeSlide].subtitle}
                   </p>
-                  <p className="mt-4 inline-flex rounded-full bg-primary/20 px-3 py-1 text-sm font-medium text-emerald-100">
+                  <p className="mt-3 inline-flex rounded-full bg-primary/20 px-2 py-0.5 text-xs font-medium text-emerald-100">
                     {heroSlides[activeSlide].highlight}
                   </p>
 
-                  <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
                     <Link
                       href="/explore"
-                      className="flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-lg font-semibold text-white shadow-[0_0_25px_rgba(46,125,50,0.35)] transition hover:bg-primary/90"
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-sm sm:px-8 sm:py-3.5 sm:text-lg font-semibold text-white shadow-[0_0_20px_rgba(46,125,50,0.25)] transition hover:bg-primary/90"
                     >
                       Start Exploring <FiArrowRight />
                     </Link>
                     <Link
                       href="/add-place"
-                      className="flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-lg font-semibold text-white backdrop-blur-md transition hover:bg-white/20"
+                      className="w-full sm:w-auto flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-4 py-2 text-sm sm:px-8 sm:py-3.5 sm:text-lg font-semibold text-white backdrop-blur-md transition hover:bg-white/20"
                     >
                       Add Your Place
                     </Link>
@@ -219,7 +219,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
-              className="rounded-3xl border border-white/20 bg-white/10 p-5 shadow-2xl backdrop-blur-xl"
+              className="rounded-3xl border border-white/20 bg-white/10 p-4 md:p-5 shadow-2xl backdrop-blur-xl w-full mt-6 lg:mt-0"
             >
               <div className="flex items-center justify-between">
                 <div>
